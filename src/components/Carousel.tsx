@@ -6,6 +6,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { MouseEvent, WheelEvent, TouchEvent } from "react";
+import "../index.css";
 // import s from "@/styles/cases-landing.module.css";
 // import NextImage from "./image";
 function useWindowSize() {
@@ -265,8 +266,8 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
                   objectFit="cover"
                   className="rounded-lg"
                 /> */}
-                <div className={"content"}>
-                  <p className={"description"}>{card.description}</p>
+                <div className="content">
+                  <p className="description">{card.description}</p>
                   {/* <Link
                     href={
                       onBlogs
@@ -286,7 +287,7 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
 
           {/* <p className={"centerText" + ""}>CASES</p> */}
         </motion.div>
-        <div ref={ground} className={"ground" + " select-none"}></div>
+        <div ref={ground} className="ground"></div>
       </motion.div>
     </motion.div>
   );
