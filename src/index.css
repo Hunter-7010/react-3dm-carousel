@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+
+.root {
+  @apply h-screen w-screen text-black;
+  overscroll-behavior-y: none;
+}
+.rootCarousel {
+  transform-style: preserve-3d;
+  perspective: 1300px;
+}
+
+.carouselContainer {
+  @apply relative flex justify-center items-center;
+  min-height: 650px;
+  width: 100%;
+  transform-style: preserve-3d;
+  perspective: 1300px;
+  transform-origin: center center calc(-300px / 100);
+}
+
+.spinningText {
+  @apply opacity-0 transition-opacity duration-300 ease-linear z-[-2];
+}
+
+.title {
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: white;
+  color: black;
+}
+
+.bigTitle {
+  @apply text-[1.2rem] lg:text-[1.7rem] 2xl:text-[2.6rem] 2xl:max-w-[18rem] max-w-[12rem] hover:underline transition-all  duration-300;
+  text-decoration-color: #ffc2e2 !important;
+}
+.content {
+  @apply px-8 flex flex-col gap-y-3 absolute bottom-[10%] lg:bottom-[10%] xl:bottom-[5%] 2xl:bottom-[10%] z-20 select-none;
+}
+.description {
+  @apply 2xl:max-w-[18rem] max-w-[8.5rem] text-[9px] lg:max-w-[12rem] 2xl:text-lg xl:text-[11px];
+}
+
+.dragContainer {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: auto;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+.spinContainer {
+  @apply w-[150px] sm:w-[220px] md:w-[220px] 2xl:w-[320px];
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: auto;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  aspect-ratio: 0.67;
+}
+@media (min-width: 1500px) {
+  .spinContainer {
+    width: 320px;
+  }
+}
+
+.images {
+  @apply border-black border-2 bg-gray-400;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /* -webkit-box-shadow: 0 0 8px #fff;
+          box-shadow: 0 0 8px #fff; */
+  /* -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, #0005); */
+}
+
+.centerText {
+  font-family: Serif;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%) rotateX(90deg);
+  transform: translate(-50%, -50%) rotateX(90deg);
+  color: #fff;
+}
+
+.ground {
+  width: 900px;
+  height: 900px;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%) rotateX(90deg);
+  transform: translate(-50%, -50%) rotateX(90deg);
+  background: -webkit-radial-gradient(
+    center center,
+    farthest-side,
+    #9993,
+    transparent
+  );
+}
