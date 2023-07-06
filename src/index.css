@@ -2,28 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-
 .root {
-  height: 100vh;
-  width: 100vw;
-  color: black;
+  @apply h-screen w-screen text-black;
   overscroll-behavior-y: none;
 }
 .rootCarousel {
@@ -32,10 +12,7 @@
 }
 
 .carouselContainer {
-  position: relative;
- display: flex;
- justify-content: center;
- align-items: center;
+  @apply relative flex justify-center items-center;
   min-height: 650px;
   width: 100%;
   transform-style: preserve-3d;
@@ -44,13 +21,7 @@
 }
 
 .spinningText {
-  opacity: 0;
-  transition-property: opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-  animation-duration: 300ms;
-  transition-timing-function: linear;
-  z-index: -2;
+  @apply opacity-0 transition-opacity duration-300 ease-linear z-[-2];
 }
 
 .title {
@@ -61,7 +32,6 @@
 
 .bigTitle {
   @apply text-[1.2rem] lg:text-[1.7rem] 2xl:text-[2.6rem] 2xl:max-w-[18rem] max-w-[12rem] hover:underline transition-all  duration-300;
-
   text-decoration-color: #ffc2e2 !important;
 }
 .content {
@@ -81,7 +51,7 @@
   transform-style: preserve-3d;
 }
 .spinContainer {
-  /* @apply w-[150px] sm:w-[220px] md:w-[220px] 2xl:w-[320px]; */
+  @apply w-[150px] sm:w-[220px] md:w-[220px] 2xl:w-[320px];
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -90,11 +60,6 @@
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   aspect-ratio: 0.67;
-}
-@media (min-width: 640px) {
-  .spinContainer {
-    width: 220px;
-  }
 }
 @media (min-width: 1500px) {
   .spinContainer {
@@ -125,7 +90,6 @@
 }
 
 .ground {
-  user-select: none;
   width: 900px;
   height: 900px;
   position: absolute;
@@ -136,7 +100,7 @@
   background: -webkit-radial-gradient(
     center center,
     farthest-side,
-    rgba(153, 153, 153, 0.574),
+    #9993,
     transparent
   );
 }

@@ -1,7 +1,7 @@
 {
   "name": "react-3dm-carousel",
   "private": false,
-  "version": "0.6.1",
+  "version": "1.0.0",
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
@@ -12,10 +12,7 @@
       "require": "./dist/index.umd.js",
       "types": "./dist/index.d.ts"
     },
-    "./style.css": {
-      "require": "./dist/style.css",
-      "default": "./dist/style.css"
-    }
+    "./style.css": "./dist/style.css"
   },
   "files": [
     "/dist"
@@ -33,7 +30,8 @@
     "framer-motion": "^10.12.18",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "vite-plugin-css-injected-by-js": "^3.1.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

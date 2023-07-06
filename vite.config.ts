@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import dts from "vite-plugin-dts";
 import path from "path";
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
 export default defineConfig({
   build: {
@@ -11,17 +12,16 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "react-dom","tailwindcss"],
+      external: ["react", "react-dom"],
       output: {
         globals: {
           react: "React",
           "react-dom": "ReactDOM",
-          "tailwindcss":"TailwindCSS"
         },
       },
     },
     sourcemap: true,
     emptyOutDir: true,
   },
-  plugins: [react(), dts()],
+  plugins: [react(), dts(), cssInjectedByJsPlugin()],
 });
