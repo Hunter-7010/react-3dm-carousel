@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   useMotionTemplate,
   useMotionValue,
@@ -50,12 +50,12 @@ type Props = {
    * defaults to `false` enabling this feature will cause the tilt to `disable`.
    */
   freeRoam?: boolean;
- /**
+  /**
    * `Optional` define the upper bounds of the free roam.
    * defaults to `0`. /- make upper bounds to `360` and lower bounds to `-360` to move in all directions.
    */
   freeRoamUpperBounds?: number;
- /**
+  /**
    * `Optional` define the lower bounds of the free roam.
    * defaults to `-180`. /- make upper bounds to `360` and lower bounds to `-360` to move in all directions.
    */
@@ -74,6 +74,7 @@ export const Carousel = ({
   freeRoamLowerBounds = -180,
 }: Props) => {
   const { width } = useWindowSize();
+  const [dummyState, setDummyState] = useState(false);
 
   const numberOfCards = cardsData.length;
   const cardGaps =
@@ -211,7 +212,13 @@ export const Carousel = ({
   };
 
   const caseSelectHandler = (idx: number) => {
-    if (pointerDown || !setSelectedCardIdx) return;
+    if (pointerDown) return;
+    console.log("");
+    if (!setSelectedCardIdx) {
+      //usefull for dragging x it resets the drag values
+      setDummyState(!dummyState);
+      return;
+    }
     setSelectedCardIdx(idx);
   };
 
