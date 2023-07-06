@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   useMotionTemplate,
   useMotionValue,
@@ -6,36 +6,13 @@ import {
   LazyMotion,
   m,
   domAnimation,
+  useAnimationControls,
 } from "framer-motion";
 import { MouseEvent, WheelEvent, TouchEvent } from "react";
 import "../index.css";
 // import s from "@/styles/cases-landing.module.css";
 // import NextImage from "./image";
-function useWindowSize() {
-  // Initialize state with undefined width/height so server and client renders match
-  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-  const [windowSize, setWindowSize] = useState({
-    width: 0,
-    height: 0,
-  });
-  useEffect(() => {
-    // Handler to call on window resize
-    function handleResize() {
-      // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-    // Add event listener
-    window.addEventListener("resize", handleResize);
-    // Call handler right away so state gets updated with initial window size
-    handleResize();
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
-  return windowSize;
-}
+import { useWindowSize } from "../utils/hooks";
 // import Link from "next/link";
 type Props = {
   cards: {
@@ -44,10 +21,31 @@ type Props = {
     description: string;
     image: string;
   }[];
-  setSelectedCaseIdx: React.Dispatch<React.SetStateAction<number>>;
+  /**
+   * `Optional` Enable or disable rotation of the carousel.
+   * Defaults to `false` (rotation is disabled).
+   */
+  rotation?: boolean;
+  /**
+   * `Optional` time in `seconds` it takes to complete a full rotation.
+   * Only applicable when `rotation` is enabled. defaults to `60` seconds.
+   */
+  rotationDuration?: number;
+  /**
+   * `Optional` Cool tilt effect on `Carousel` relative to mouse position.
+   * defaults to `true`.
+   */
+  tilt?: boolean;
+  setSelectedCardIdx?: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
+export const Carousel = ({
+  cards,
+  setSelectedCardIdx = undefined,
+  rotation = false, // infinite rotation
+  rotationDuration = 60, //time it takes to complete a full rotation
+  tilt = true,
+}: Props) => {
   const { width } = useWindowSize();
 
   const numberOfCards = cards.length;
@@ -83,14 +81,22 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
   const rotate = useMotionValue(0);
   // const rotateSpring = useSpring(rotate);
 
-  // const controls = useAnimationControls();
+  const controls = useAnimationControls();
   // const [scope, animate] = useAnimate();
 
   //   setting animation on first render for the images if infinite animation is needed
-  // useEffect(() => {
-  //   animate(scope.current, { rotateX: -90 });
-  // }, []);
-
+  useEffect(() => {
+    if (rotation) {
+      controls.start({
+        rotateY: 360,
+        transition: {
+          duration: rotationDuration,
+          repeat: Infinity,
+          ease: "linear",
+        },
+      });
+    }
+  }, []);
   const handleMouseWheel = (e: WheelEvent) => {
     const d = +e.deltaY / 20;
     // setting minimum radius to 360
@@ -117,15 +123,24 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
   const pointerDownHandler = (e: MouseEvent) => {
     e.preventDefault();
     pointerDown = true;
-    // controls.stop(); // stop the the initial animation
+    if (rotation) {
+      controls.stop(); // stop the the initial animation
+    }
+    controls.stop(); // stop the the initial animation
   };
   const pointerUpHandler = () => {
     pointerDown = false;
     //for starting initial animation
-    // controls.start({
-    //   rotateY: 360,
-    //   transition: { duration: 60, repeat: Infinity, ease: "linear" },
-    // });
+    if (rotation) {
+      controls.start({
+        rotateY: 360,
+        transition: {
+          duration: rotationDuration,
+          repeat: Infinity,
+          ease: "linear",
+        },
+      });
+    }
   };
   const mouseLeaveHandler = () => {
     pointerDown = false;
@@ -168,11 +183,12 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
   };
 
   const caseSelectHandler = (idx: number) => {
-    if (pointerDown) return;
-    setSelectedCaseIdx(idx);
+    if (pointerDown || !setSelectedCardIdx) return;
+    setSelectedCardIdx(idx);
   };
 
   useEffect(() => {
+    if (!tilt) return;
     const root = rootRef.current;
     const container = odrag.current;
     // Mouse Tracking animation
@@ -184,7 +200,6 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
       const rotateXVal = (clientY - clientHeight / 2) * 0.04;
       const rotateYVal = (clientWidth / 2 - clientX) * 0.01;
 
-      // container.style.transform = `rotateX(${rotateXVal}deg) rotate(${rotateYVal}deg)`;
       rotate.set(rotateYVal);
       dragTx.set(rotateXVal);
     };
@@ -199,6 +214,27 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
       );
     };
   }, []);
+
+  const carouselVarients = {
+    infiniteRotatation: ({
+      idx,
+      cardGaps,
+    }: {
+      idx: number;
+      cardGaps: number;
+    }) => ({
+      transform: `rotateY(${
+        (idx + 1) * (360 / numberOfCards)
+      }deg) translateZ(${cardGaps}px)`,
+      transition: {
+        delay: 0.2 * (idx + 1),
+        duration: 0.9,
+      },
+    }),
+    inifineRotationInitial: {
+      transform: `rotateY(0deg) translateZ(0px)`,
+    },
+  };
   return (
     <LazyMotion features={domAnimation}>
       <m.div
@@ -212,7 +248,7 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
         ref={rootRef}
         className={
           "rootCarousel" +
-          " flex h-screen w-screen items-center overflow-hidden justify-center active:cursor-grab"
+          " flex h-screen w-screen items-center overflow-hidden justify-center active:cursor-grab text-white"
         }
       >
         <m.div
@@ -228,13 +264,8 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
           <m.div
             ref={ospin}
             className={"spinContainer"}
-            // style={{
-            //   width: imgWidth,
-            //   height: imgHeight,
-            // }}
             // if initial animation for infinite rotate is needed
-            //   animate={controls}
-            //   transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            animate={controls}
           >
             {cards &&
               cards.map((card, idx: number) => (
@@ -246,22 +277,15 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
                   style={{
                     // x: useMotionTemplate`${radiusMotion}px`,
                     transform: useMotionTemplate`rotateY(${
-                      (idx + 1) * (360 / cards.length)
+                      (idx + 1) * (360 / numberOfCards)
                     }deg) translateZ(${cardGaps}px)`,
+                    backgroundImage: `url(${card.image})`,
                   }}
+                  custom={{ idx, cardGaps }}
+                  variants={carouselVarients}
                   //  animations for starting animation
-                  initial={{
-                    transform: `rotateY(0deg) translateZ(0px)`,
-                  }}
-                  animate={{
-                    transform: `rotateY(${
-                      (idx + 1) * (360 / cards.length)
-                    }deg) translateZ(${cardGaps}px)`,
-                  }}
-                  transition={{
-                    delay: 0.2 * (idx + 1),
-                    duration: 0.9,
-                  }}
+                  initial="inifineRotationInitial"
+                  animate="infiniteRotatation"
                 >
                   {/* <NextImage
                   layout="fill"
@@ -282,8 +306,8 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
                         : `cases/${card.slug}`
                     }
                   >
-                    <h3 className={"bigTitle"}>{card.bigTitle}</h3>
-                  </Link> */}
+                </Link> */}
+                    <h3 className={"bigTitle"}>{card.title}</h3>
                   </div>
                 </m.div>
               ))}
