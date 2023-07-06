@@ -10,12 +10,16 @@ import {
 } from "framer-motion";
 import { MouseEvent, WheelEvent, TouchEvent } from "react";
 import "../index.css";
+import { defaultData } from "../utils/consts";
 // import s from "@/styles/cases-landing.module.css";
 // import NextImage from "./image";
 import { useWindowSize } from "../utils/hooks";
 // import Link from "next/link";
 type Props = {
-  cards: {
+  /**
+   * Card data that is passed.
+   */
+  cardsData?: {
     id: string;
     title: string;
     description: string;
@@ -23,7 +27,7 @@ type Props = {
   }[];
   /**
    * `Optional` Enable or disable rotation of the carousel.
-   * Defaults to `false` (rotation is disabled).
+   * Defaults to `true` (rotation is enabled).
    */
   rotation?: boolean;
   /**
@@ -36,19 +40,42 @@ type Props = {
    * defaults to `true`.
    */
   tilt?: boolean;
+  /**
+   * `Optional` `React state setter` to pass your setState to Carousel.
+   * defaults to `undefined`.
+   */
   setSelectedCardIdx?: React.Dispatch<React.SetStateAction<number>>;
+  /**
+   * `Optional` Enables the user to freely rotate and move around the carousel canvas.
+   * defaults to `false` enabling this feature will cause the tilt to `disable`.
+   */
+  freeRoam?: boolean;
+ /**
+   * `Optional` define the upper bounds of the free roam.
+   * defaults to `0`. /- make upper bounds to `360` and lower bounds to `-360` to move in all directions.
+   */
+  freeRoamUpperBounds?: number;
+ /**
+   * `Optional` define the lower bounds of the free roam.
+   * defaults to `-180`. /- make upper bounds to `360` and lower bounds to `-360` to move in all directions.
+   */
+  freeRoamLowerBounds?: number;
 };
 
 export const Carousel = ({
-  cards,
+  cardsData = defaultData,
   setSelectedCardIdx = undefined,
-  rotation = false, // infinite rotation
+  rotation = true, // infinite rotation
   rotationDuration = 60, //time it takes to complete a full rotation
   tilt = true,
+  freeRoam = false,
+  freeRoamUpperBounds = 0,
+
+  freeRoamLowerBounds = -180,
 }: Props) => {
   const { width } = useWindowSize();
 
-  const numberOfCards = cards.length;
+  const numberOfCards = cardsData.length;
   const cardGaps =
     numberOfCards *
     (width <= 412 ? 25 : width <= 767 ? 35 : width <= 1500 ? 36 : 53);
@@ -75,7 +102,7 @@ export const Carousel = ({
 
   // vertical rotation
   const dragTx = useMotionValue(-0);
-  // const dragTxSpring = useSpring(dragTx);
+  const dragTxSpring = useSpring(dragTx, { damping: 200, stiffness: 400 });
 
   //rotate
   const rotate = useMotionValue(0);
@@ -155,19 +182,20 @@ export const Carousel = ({
     startX = e.clientX;
     startY = e.clientY;
     // console.log("deltaY", deltaY, "deltaX", deltaX);
+    if (deltaY > 100) return;
     if (
       // at first drag values shouldnt be too great
       // deltaX > 200 ||
-      deltaY > 100 //||
+      freeRoam &&
       // set the bound for vertical rotation
-      // dragTx.get() - deltaY * rotationSensitivity >= 0 ||
-      // dragTx.get() - deltaY * rotationSensitivity <= -180
-    )
-      return;
+      dragTx.get() - deltaY * rotationSensitivity <= freeRoamUpperBounds &&
+      dragTx.get() - deltaY * rotationSensitivity >= freeRoamLowerBounds
+    ) {
+      dragTx.set(dragTx.get() - deltaY * rotationSensitivity);
+    }
 
     dragTy.set(dragTy.get() + deltaX * rotationSensitivity);
-    // dragTx.set(dragTx.get() - deltaY * rotationSensitivity);
-    // console.log("dragtx", dragTx.get(), "dragty", dragTy.getVelocity());
+    // console.log("dragtx", deltaY, "dragty", dragTy.get());
   };
 
   let touchStartX = 0;
@@ -188,7 +216,7 @@ export const Carousel = ({
   };
 
   useEffect(() => {
-    if (!tilt) return;
+    if (!tilt || freeRoam) return;
     const root = rootRef.current;
     const container = odrag.current;
     // Mouse Tracking animation
@@ -197,7 +225,7 @@ export const Carousel = ({
       const { clientX, clientY } = e;
       const { width: clientWidth, height: clientHeight } =
         root.getBoundingClientRect();
-      const rotateXVal = (clientY - clientHeight / 2) * 0.04;
+      const rotateXVal = (clientY - clientHeight / 2) * 0.06;
       const rotateYVal = (clientWidth / 2 - clientX) * 0.01;
 
       rotate.set(rotateYVal);
@@ -256,7 +284,7 @@ export const Carousel = ({
           className={"dragContainer"}
           //  responsible for dragging effect
           style={{
-            rotateX: dragTx,
+            rotateX: dragTxSpring,
             rotateY: dragTySpring,
             rotate: rotate,
           }}
@@ -267,8 +295,8 @@ export const Carousel = ({
             // if initial animation for infinite rotate is needed
             animate={controls}
           >
-            {cards &&
-              cards.map((card, idx: number) => (
+            {cardsData &&
+              cardsData.map((card, idx: number) => (
                 <m.div
                   key={idx + 1}
                   // ref={scope}

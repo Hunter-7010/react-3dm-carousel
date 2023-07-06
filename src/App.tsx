@@ -26,7 +26,7 @@ function App() {
       title: "City Tour",
       description: "Explore the vibrant streets of a bustling city.",
       image:
-        "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBob3RvZ3JhcGh5JTIwYXJ0fGVufDB8MHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+        "https://images.unsplash.com/photo-1507643179773-3e975d7ac515?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fHBob3RvZ3JhcGh5JTIwYXJ0fGVufDB8MHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
       tags: ["City", "Exploration", "Vibrant"],
     },
     {
@@ -42,7 +42,7 @@ function App() {
       title: "Wildlife Safari",
       description: "Discover exotic wildlife in their natural habitat.",
       image:
-        "https://images.unsplash.com/photo-1507643179773-3e975d7ac515?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fHBob3RvZ3JhcGh5JTIwYXJ0fGVufDB8MHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+        "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHBob3RvZ3JhcGh5JTIwYXJ0fGVufDB8MHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
       tags: ["Wildlife", "Safari", "Nature"],
     },
     {
@@ -66,15 +66,18 @@ function App() {
   return (
     <div className="w-screen h-screen flex justify-center items-center fixed bg-voilet-50">
       <Carousel
-        cards={data}
+        cardsData={data}
         setSelectedCardIdx={setSelectedCardIdx}
-        rotation
+        rotation={true}
         rotationDuration={60}
-        tilt={false}
+        tilt={true}
+        freeRoam
+        freeRoamLowerBounds={-180}
+        freeRoamUpperBounds={0}
       />
       <div className="w-[25%] h-[25%] absolute bottom-12 left-6 flex flex-col font-serif space-y-2">
         {data[selectedCardIdx].tags.map((tag) => (
-          <p className="text-5xl">&#x2022; {tag}</p>
+          <p className="text-5xl text-gray-900">&#x2022; {tag}</p>
         ))}
       </div>
     </div>
