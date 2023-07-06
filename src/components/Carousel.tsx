@@ -1,9 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import {
-  motion,
   useMotionTemplate,
   useMotionValue,
   useSpring,
+  LazyMotion,
+  m,
+  domAnimation,
 } from "framer-motion";
 import { MouseEvent, WheelEvent, TouchEvent } from "react";
 import "../index.css";
@@ -198,77 +200,78 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
     };
   }, []);
   return (
-    <motion.div
-      onWheel={handleMouseWheel}
-      onMouseDown={pointerDownHandler}
-      onMouseUp={pointerUpHandler}
-      onPointerMove={pointerMoveHandler}
-      onTouchStart={touchStartHandler}
-      onTouchMove={touchMoveHandler}
-      onMouseLeave={mouseLeaveHandler}
-      ref={rootRef}
-      className={
-        "rootCarousel" +
-        " flex h-screen w-screen items-center overflow-hidden justify-center active:cursor-grab"
-      }
-    >
-      <motion.div
-        ref={odrag}
-        className={"dragContainer"}
-        //  responsible for dragging effect
-        style={{
-          rotateX: dragTx,
-          rotateY: dragTySpring,
-          rotate: rotate,
-        }}
+    <LazyMotion features={domAnimation}>
+      <m.div
+        onWheel={handleMouseWheel}
+        onMouseDown={pointerDownHandler}
+        onMouseUp={pointerUpHandler}
+        onPointerMove={pointerMoveHandler}
+        onTouchStart={touchStartHandler}
+        onTouchMove={touchMoveHandler}
+        onMouseLeave={mouseLeaveHandler}
+        ref={rootRef}
+        className={
+          "rootCarousel" +
+          " flex h-screen w-screen items-center overflow-hidden justify-center active:cursor-grab"
+        }
       >
-        <motion.div
-          ref={ospin}
-          className={"spinContainer"}
-          // style={{
-          //   width: imgWidth,
-          //   height: imgHeight,
-          // }}
-          // if initial animation for infinite rotate is needed
-          //   animate={controls}
-          //   transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+        <m.div
+          ref={odrag}
+          className={"dragContainer"}
+          //  responsible for dragging effect
+          style={{
+            rotateX: dragTx,
+            rotateY: dragTySpring,
+            rotate: rotate,
+          }}
         >
-          {cards &&
-            cards.map((card, idx: number) => (
-              <motion.div
-                key={idx + 1}
-                // ref={scope}
-                onMouseEnter={() => caseSelectHandler(idx)} // cause render which breaks the drag
-                className={"images" + ""} // setting style for increasing radius of the images
-                style={{
-                  // x: useMotionTemplate`${radiusMotion}px`,
-                  transform: useMotionTemplate`rotateY(${
-                    (idx + 1) * (360 / cards.length)
-                  }deg) translateZ(${cardGaps}px)`,
-                }}
-                //  animations for starting animation
-                initial={{
-                  transform: `rotateY(0deg) translateZ(0px)`,
-                }}
-                animate={{
-                  transform: `rotateY(${
-                    (idx + 1) * (360 / cards.length)
-                  }deg) translateZ(${cardGaps}px)`,
-                }}
-                transition={{
-                  delay: 0.2 * (idx + 1),
-                  duration: 0.9,
-                }}
-              >
-                {/* <NextImage
+          <m.div
+            ref={ospin}
+            className={"spinContainer"}
+            // style={{
+            //   width: imgWidth,
+            //   height: imgHeight,
+            // }}
+            // if initial animation for infinite rotate is needed
+            //   animate={controls}
+            //   transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          >
+            {cards &&
+              cards.map((card, idx: number) => (
+                <m.div
+                  key={idx + 1}
+                  // ref={scope}
+                  onMouseEnter={() => caseSelectHandler(idx)} // cause render which breaks the drag
+                  className={"images" + ""} // setting style for increasing radius of the images
+                  style={{
+                    // x: useMotionTemplate`${radiusMotion}px`,
+                    transform: useMotionTemplate`rotateY(${
+                      (idx + 1) * (360 / cards.length)
+                    }deg) translateZ(${cardGaps}px)`,
+                  }}
+                  //  animations for starting animation
+                  initial={{
+                    transform: `rotateY(0deg) translateZ(0px)`,
+                  }}
+                  animate={{
+                    transform: `rotateY(${
+                      (idx + 1) * (360 / cards.length)
+                    }deg) translateZ(${cardGaps}px)`,
+                  }}
+                  transition={{
+                    delay: 0.2 * (idx + 1),
+                    duration: 0.9,
+                  }}
+                >
+                  {/* <NextImage
                   layout="fill"
                   media={card.bgImg}
                   objectFit="cover"
                   className="rounded-lg"
                 /> */}
-                <div className="content">
-                  <p className="description">{card.description}</p>
-                  {/* <Link
+                  <div className="content">
+                    <p className="description">{card.description}</p>
+                    {/* <Link
                     href={
                       onBlogs
                         ? card.blogLink.url
@@ -281,14 +284,15 @@ export const Carousel = ({ cards, setSelectedCaseIdx }: Props) => {
                   >
                     <h3 className={"bigTitle"}>{card.bigTitle}</h3>
                   </Link> */}
-                </div>
-              </motion.div>
-            ))}
+                  </div>
+                </m.div>
+              ))}
 
-          {/* <p className={"centerText" + ""}>CASES</p> */}
-        </motion.div>
-        <div ref={ground} className="ground"></div>
-      </motion.div>
-    </motion.div>
+            {/* <p className={"centerText" + ""}>CASES</p> */}
+          </m.div>
+          <div ref={ground} className="ground"></div>
+        </m.div>
+      </m.div>
+    </LazyMotion>
   );
 };
