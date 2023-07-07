@@ -1,4 +1,4 @@
-# react-3dm-carousel
+# [react-3dm-carousel](https://react-3dm-carousel.vercel.app)
 
 React-3DM-Carousel is a powerful and versatile carousel component for React applications. With its captivating 3D effect, it provides an exceptional way to showcase your gallery, portfolio, or projects in an engaging and visually appealing manner.
 
@@ -98,7 +98,7 @@ And you're all set. You can also use props for better control of how the carouse
 
 | Name            | Default value                    | Description                                                                                                                                                                                                                                                                                          |
 | --------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| cardsData          | `dummy data `                             | An array containing elements of the form `[{ id: string; title: string; description: string; image: string; }]` where key holds any unique value, title and description for the title and description and image url for the background image of the card. |
+| cardsData          | `dummy data `                             | An array containing elements of the form `[{ id: string; title: string; description: string; image: string; routeTo?: string }]` where key holds any unique value, title and description for the title and description and image url for the background image of the card. |
 | startingAnimation  | `true`  | `Optional` Enable or disable the starting animation of the carousel. Defaults to `true`. |
 | rotateOnScroll  | `true`  | `Optional` Enable or disable the rotating of the carousel on scroll. Defaults to `true`. |
 | drag  | `true`  | `Optional` Enable or disable the dragging of the carousel. Defaults to `true`. |
