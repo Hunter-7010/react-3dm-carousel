@@ -26,6 +26,21 @@ type Props = {
     image: string;
   }[];
   /**
+   * `Optional` Enable or disable the starting animation of the carousel.
+   * Defaults to `true`.
+   */
+  startingAnimation?: boolean;
+  /**
+   * `Optional` Enable or disable the rotating of the carousel on scroll.
+   * Defaults to `true`.
+   */
+  rotateOnScroll?: boolean;
+  /**
+   * `Optional` Enable or disable the dragging of the carousel.
+   * Defaults to `true`.
+   */
+  drag?: boolean;
+  /**
    * `Optional` Enable or disable rotation of the carousel.
    * Defaults to `true` (rotation is enabled).
    */
@@ -60,18 +75,32 @@ type Props = {
    * defaults to `-180`. /- make upper bounds to `360` and lower bounds to `-360` to move in all directions.
    */
   freeRoamLowerBounds?: number;
+  /**
+   * `Optional` Provide an onclick handler function for title, when it is clicked it will return the clicked card.
+   * defaults to `()=>{}`. /- Can be useful if you want to route to another path that you defined in your function.
+   */
+  onTitleClickHandler?: (card: {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    routeTo?: string;
+  }) => void;
 };
 
 export const Carousel = ({
   cardsData = defaultData,
+  startingAnimation = true,
+  rotateOnScroll = true,
+  drag = true,
   setSelectedCardIdx = undefined,
   rotation = true, // infinite rotation
   rotationDuration = 60, //time it takes to complete a full rotation
   tilt = true,
   freeRoam = false,
   freeRoamUpperBounds = 0,
-
   freeRoamLowerBounds = -180,
+  onTitleClickHandler = () => {},
 }: Props) => {
   const { width } = useWindowSize();
   const [dummyState, setDummyState] = useState(false);
@@ -126,6 +155,7 @@ export const Carousel = ({
     }
   }, []);
   const handleMouseWheel = (e: WheelEvent) => {
+    if(!rotateOnScroll) return
     const d = +e.deltaY / 20;
     // setting minimum radius to 360
     if (expand && d > 0) {
@@ -149,6 +179,7 @@ export const Carousel = ({
 
   // camera drag
   const pointerDownHandler = (e: MouseEvent) => {
+    if(!drag) return
     e.preventDefault();
     pointerDown = true;
     if (rotation) {
@@ -157,6 +188,7 @@ export const Carousel = ({
     controls.stop(); // stop the the initial animation
   };
   const pointerUpHandler = () => {
+    if(!drag) return
     pointerDown = false;
     //for starting initial animation
     if (rotation) {
@@ -171,10 +203,12 @@ export const Carousel = ({
     }
   };
   const mouseLeaveHandler = () => {
+    if(!drag) return
     pointerDown = false;
   };
 
   const pointerMoveHandler = (e: MouseEvent) => {
+    if(!drag) return
     if (!pointerDown) return;
     e.preventDefault();
     const rotationSensitivity = 0.4; // Adjust the rotation sensitivity as needed
@@ -203,9 +237,11 @@ export const Carousel = ({
   let deltaX = 0;
 
   const touchStartHandler = (e: TouchEvent) => {
+    if(!drag) return
     touchStartX = e.touches[0].pageX;
   };
   const touchMoveHandler = (e: TouchEvent) => {
+    if(!drag) return
     deltaX = touchStartX - e.touches[0].pageX;
     touchStartX = e.touches[0].pageX;
     dragTy.set(dragTy.get() - deltaX * 0.6);
@@ -213,7 +249,6 @@ export const Carousel = ({
 
   const caseSelectHandler = (idx: number) => {
     if (pointerDown) return;
-    console.log("");
     if (!setSelectedCardIdx) {
       //usefull for dragging x it resets the drag values
       setDummyState(!dummyState);
@@ -319,8 +354,8 @@ export const Carousel = ({
                   custom={{ idx, cardGaps }}
                   variants={carouselVarients}
                   //  animations for starting animation
-                  initial="inifineRotationInitial"
-                  animate="infiniteRotatation"
+                  initial={startingAnimation ? "inifineRotationInitial" : ""}
+                  animate={startingAnimation ? "infiniteRotatation" : ""}
                 >
                   {/* <NextImage
                   layout="fill"
@@ -342,7 +377,12 @@ export const Carousel = ({
                     }
                   >
                 </Link> */}
-                    <h3 className={"bigTitle"}>{card.title}</h3>
+                    <h3
+                      onClick={() => onTitleClickHandler(card)}
+                      className={"bigTitle"}
+                    >
+                      {card.title}
+                    </h3>
                   </div>
                 </m.div>
               ))}
