@@ -12,6 +12,7 @@ function App() {
       image:
         "https://plus.unsplash.com/premium_photo-1687881775352-9cac69fe3df0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YnJpZ2h0fGVufDB8MHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
       tags: ["Beach", "Relaxation", "Getaway"],
+      routeTo: "some url",
     },
     {
       id: "2",
@@ -62,7 +63,15 @@ function App() {
       tags: ["Food", "Culinary", "Flavors"],
     },
   ];
-
+  const onTitleClickHandler = (card: {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    routeTo?: string;
+  }) => {
+    console.log("clicked", card);
+  };
   return (
     <div className="w-screen h-screen flex justify-center items-center fixed bg-voilet-50">
       <Carousel
@@ -71,9 +80,13 @@ function App() {
         rotation={true}
         rotationDuration={60}
         tilt={true}
-        freeRoam
+        freeRoam={false}
         freeRoamLowerBounds={-180}
         freeRoamUpperBounds={0}
+        onTitleClickHandler={onTitleClickHandler}
+        startingAnimation={true}
+        rotateOnScroll={true}
+        drag={true}
       />
       <div className="w-[25%] h-[25%] absolute bottom-12 left-6 flex flex-col font-serif space-y-2">
         {data[selectedCardIdx].tags.map((tag) => (
