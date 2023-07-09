@@ -20,7 +20,7 @@ Easily modify displayed cards and images to suit your needs, offering complete v
 Comprehensive feature control to enable, disable, or customize functionalities according to your requirements.
 
 
-![Carousel Example](https://ucarecdn.com/3a5c0e50-634b-464d-b583-e9b7a29a1e9c/ScreenShot20230706at111426PM.png)
+![Carousel Example](https://ucarecdn.com/1e93f158-fcce-44dc-86b7-7a8b3daf0b8e/ScreenShot20230709at111037PM.png)
 
 
 ## Example
