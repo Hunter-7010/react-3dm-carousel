@@ -8,6 +8,10 @@
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hunter-7010/react-3dm-carousel.git"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.es.js",
