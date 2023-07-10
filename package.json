@@ -2,12 +2,16 @@
   "name": "react-3dm-carousel",
   "license": "MIT",
   "private": false,
-  "version": "1.3.0",
+  "version": "1.3.1",
   "author": "Zaki Orya",
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hunter-7010/react-3dm-carousel.git"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.es.js",
