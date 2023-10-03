@@ -43,13 +43,13 @@ yarn add react-3dm-carousel
 
 Then import the Carousel component like so :
 
-```
+```ts
 import { Carousel } from 'react-3dm-carousel';
 ```
 
 All you need to do:
 
-```
+```ts
 import { Carousel } from "react-3dm-carousel";
 const App = () => {
  return (
@@ -63,7 +63,7 @@ const App = () => {
 
 Carousel with all the props
 
-```
+```ts
 import { Carousel } from "react-3dm-carousel";
 const App = () => {
   const onTitleClickHandler =(card:CardType)=>{
@@ -90,6 +90,75 @@ const App = () => {
   );
 }
 
+```
+
+## Styles
+```css
+.rootCarousel {    /* carousel container */
+  transform-style: preserve-3d;
+  perspective: 1300px;
+}
+.bigTitle {/* Title */
+  @apply text-[1.2rem] lg:text-[1.7rem] 2xl:text-[2.6rem] 2xl:max-w-[18rem] max-w-[12rem] hover:underline transition-all  duration-300 cursor-pointer leading-7 min-[1500px]:leading-10;
+  text-decoration-color: #ffc2e2 !important;
+}
+.content { /* Title is inside this */
+  @apply px-8 flex flex-col gap-y-3 absolute bottom-[10%] lg:bottom-[10%] xl:bottom-[5%] 2xl:bottom-[10%] z-20 select-none;
+}
+.description {
+  @apply 2xl:max-w-[18rem] max-w-[8.5rem] text-[9px] lg:max-w-[12rem] 2xl:text-lg xl:text-[11px];
+}
+
+.dragContainer {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: auto;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+.spinContainer { /* add responsiveness to your cards over here i mixed tailwind with css but you can use it however you want */
+  @apply w-[150px] sm:w-[220px] md:w-[220px] 2xl:w-[320px];
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: auto;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  aspect-ratio: 0.67;
+}
+@media (min-width: 1500px) {
+  .spinContainer {
+    width: 320px;
+  }
+}
+
+.images {/* How the image should look */
+  @apply bg-cover rounded-lg bg-gray-300;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ground {
+  width: 900px;
+  height: 900px;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%) rotateX(90deg);
+  transform: translate(-50%, -50%) rotateX(90deg);
+  background: -webkit-radial-gradient(
+    center center,
+    farthest-side,
+    rgba(174, 171, 171, 0.353),
+    transparent
+  );
+}
 ```
 
 And you're all set. You can also use props for better control of how the carousel looks and behaves:
