@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
-import { Carousel } from "./components/Carousel";
+import { Carousel, FunctionsRefType } from "./components/Carousel";
 
 function App() {
   const [selectedCardIdx, setSelectedCardIdx] = useState(0);
@@ -72,14 +72,33 @@ function App() {
   }) => {
     console.log("clicked", card);
   };
+  const carouselRef = useRef<FunctionsRefType>(null);
+  const handleNext = () => {
+    carouselRef.current && carouselRef.current.nextCardHandler();
+  };
+  const handlePrev = () => {
+    carouselRef.current && carouselRef.current.prevCardHandler();
+  };
   return (
     <div className="w-screen h-screen flex justify-center items-center fixed bg-voilet-50">
+      <button
+        onClick={handleNext}
+        className="w-56 h-24 bg-red-500 "
+      >
+        Next
+      </button>
+      <button
+        onClick={handlePrev}
+        className="w-56 h-24 bg-red-500 "
+      >
+        Previous
+      </button>
       <Carousel
         cardsData={data}
         setSelectedCardIdx={setSelectedCardIdx}
-        rotation={true}
+        rotation={false}
         rotationDuration={60}
-        tilt={true}
+        tilt={false}
         freeRoam={false}
         freeRoamLowerBounds={-180}
         freeRoamUpperBounds={0}
@@ -87,6 +106,7 @@ function App() {
         startingAnimation={true}
         rotateOnScroll={true}
         drag={true}
+        ref={carouselRef}
       />
       <div className="w-[25%] h-[25%] absolute bottom-12 left-6 flex flex-col font-serif space-y-2">
         {data[selectedCardIdx].tags.map((tag) => (

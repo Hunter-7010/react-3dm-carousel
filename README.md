@@ -61,6 +61,35 @@ const App = () => {
 
 ```
 
+Carousel with Nextcardfunction and previousCardFunction
+
+```ts
+import { Carousel, FunctionsRefType } from "react-3dm-carousel";
+const App = () => {
+  const carouselRef = useRef<FunctionsRefType>(null);
+  const handleNext = () => {
+    carouselRef.current && carouselRef.current.nextCardHandler();
+  };
+  const handlePrev = () => {
+    carouselRef.current && carouselRef.current.prevCardHandler();
+  };
+ return (
+    <div className="">
+      <Carousel
+        cardsData={data}
+        rotation={false}
+        tilt={false}
+        freeRoam={false}
+        startingAnimation={true}
+        drag={true}
+        ref={carouselRef}
+      />
+    </div>
+  );
+}
+
+```
+
 Carousel with all the props
 
 ```ts
