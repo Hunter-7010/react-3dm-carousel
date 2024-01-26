@@ -13,6 +13,7 @@ import {
   m,
   domAnimation,
   useAnimationControls,
+  animate,
 } from "framer-motion";
 import { MouseEvent, WheelEvent, TouchEvent } from "react";
 import "../index.css";
@@ -125,6 +126,11 @@ export const Carousel = forwardRef<Ref, Props>(
       numberOfCards *
       (width <= 412 ? 25 : width <= 767 ? 35 : width <= 1500 ? 36 : 53);
 
+      function createRefs(ref: any, col: any, idx: number) {
+        if (!ref.current) return;
+        ref.current[idx] = col;
+      }
+
     // const radiusMotion = useMotionValue(300);
     // const radiusMotionSpring = useSpring(radiusMotion, {
     //   damping: 200,
@@ -135,6 +141,7 @@ export const Carousel = forwardRef<Ref, Props>(
     const ospin = useRef(null);
     const odrag = useRef(null);
     const ground = useRef(null);
+    const cardsRef = useRef([]);
     //using let to not cause react rerenders
     let startX = 0;
     let startY = 0;
@@ -300,6 +307,24 @@ export const Carousel = forwardRef<Ref, Props>(
       };
     }, []);
 
+    useEffect(() => {
+      cardsRef.current.map(async (card, idx) => {
+        await animate(
+          card,
+          {
+            transform: `rotateY(${
+              (idx + 1) * (360 / cardsData.length)
+            }deg) translateZ(${cardGaps}px)`,
+          },
+          {
+            ease: "easeOut",
+            delay: idx * 0.2,
+            duration: 0.8,
+          },
+        );
+      });
+    }, [width]);
+
     const carouselVarients = {
       infiniteRotatation: ({
         idx,
@@ -366,21 +391,21 @@ export const Carousel = forwardRef<Ref, Props>(
                 cardsData.map((card, idx: number) => (
                   <m.div
                     key={idx + 1}
-                    // ref={scope}
+                    ref={(e) => createRefs(cardsRef, e, idx)}
                     onMouseEnter={() => caseSelectHandler(idx)} // cause render which breaks the drag
                     className={"images" + ""} // setting style for increasing radius of the images
                     style={{
                       // x: useMotionTemplate`${radiusMotion}px`,
-                      transform: useMotionTemplate`rotateY(${
-                        (idx + 1) * (360 / numberOfCards)
-                      }deg) translateZ(${cardGaps}px)`,
+                      // transform: useMotionTemplate`rotateY(${
+                      //   (idx + 1) * (360 / numberOfCards)
+                      // }deg) translateZ(${cardGaps}px)`,
                       backgroundImage: `url(${card.image})`,
                     }}
-                    custom={{ idx, cardGaps }}
-                    variants={carouselVarients}
-                    //  animations for starting animation
-                    initial={startingAnimation ? "inifineRotationInitial" : ""}
-                    animate={startingAnimation ? "infiniteRotatation" : ""}
+                    // custom={{ idx, cardGaps }}
+                    // variants={carouselVarients}
+                    // //  animations for starting animation
+                    // initial={startingAnimation ? "inifineRotationInitial" : ""}
+                    // animate={startingAnimation ? "infiniteRotatation" : ""}
                   >
                     {/* <NextImage
                   layout="fill"

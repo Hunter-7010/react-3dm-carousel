@@ -2,7 +2,7 @@
   "name": "react-3dm-carousel",
   "license": "MIT",
   "private": false,
-  "version": "1.3.2",
+  "version": "1.4.0",
   "author": "Zaki Orya",
   "type": "module",
   "main": "dist/index.umd.js",
